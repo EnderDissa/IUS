@@ -1,9 +1,13 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
-df = pd.read_csv('input.csv')
 
+banlist = ['IDLE', 'Tmr Svc'] #ignoring threads
+
+df = pd.read_csv('input.csv')
 df.sort_values(by='time_ms', inplace=True)
+df = df[~df['task'].isin(banlist)]
+
 processes = df['task'].unique()
 
 plt.figure(figsize=(12, 6))
@@ -20,7 +24,7 @@ for process in processes:
 
 plt.title('Гонка процессов')
 plt.xlabel('Время (мс)')
-plt.ylabel('ID процесса')
+plt.ylabel('Название процесса')
 plt.grid(True, axis='x', linestyle='--', alpha=0.5)
 
 plt.tight_layout() 
