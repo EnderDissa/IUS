@@ -3,6 +3,29 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import SpanSelector, Button, Slider
 from datetime import datetime
 
+
+custom_style = {
+    'axes.facecolor': '#0A1A1F',      
+    'figure.facecolor': '#0A1A1F',    
+    'axes.labelcolor': '#FFD700',    
+    'xtick.color': '#33ffff',        
+    'ytick.color': '#33ffff',          
+    'grid.color': '#1E3A40',        
+    'text.color': '#FFD700',        
+    'axes.titlecolor': '#FFD700',      
+    'axes.edgecolor': '#33ffff',
+    
+    'axes.labelweight': 'bold',
+    'xtick.labelsize': 10,
+    'ytick.labelsize': 10,
+    'axes.labelsize': 12,
+    'axes.titleweight': 'bold',
+    'axes.titlesize': 14,
+}
+plt.rcParams.update(custom_style)
+
+
+
 banlist = ['IDLE', 'Tmr Svc'] #ignoring threads
 
 df = pd.read_csv('input.csv')
@@ -35,7 +58,7 @@ for process in processes:
         if current['event'] == 'in':
             start_time = current['time_ms']
             end_time = next_event['time_ms']
-            ax.barh(process_categories[process], end_time - start_time, left=start_time, height=0.1, color='green', edgecolor='black')
+            ax.barh(process_categories[process], end_time - start_time, left=start_time, height=0.6, color='#2D4A53', edgecolor='#FFD700',linewidth=0.8, alpha=0.9,zorder=3)
 
 ax.set_yticks(list(process_categories.values()))
 ax.set_yticklabels(list(process_categories.keys()))
@@ -66,6 +89,24 @@ ax_save = plt.axes([0.75, 0.05, 0.1, 0.04])
 btn_reset = Button(ax_reset, 'Сброс')
 btn_save = Button(ax_save, 'Сохранить')
 
+ax_slider.set_facecolor('#0A1A1F')
+time_slider.label.set_color('#FFD700')
+time_slider.valtext.set_color('#FFD700')
+time_slider.track.set_facecolor('#1E3A40')
+time_slider.track.set_edgecolor('#2D4A53') 
+
+
+btn_reset.label.set_color('#0A1A1F')    
+btn_reset.color = '#FFD700'    
+btn_reset.hovercolor = '#2D4A53'  
+
+btn_save.label.set_color('#0A1A1F')
+btn_save.color = '#FFD700'
+btn_save.hovercolor = '#2D4A53'
+
+ax.spines['top'].set_visible(False) 
+ax.spines['right'].set_visible(False) 
+ax.grid(True, axis='x', linestyle='--', alpha=0.3)
 
 """
 def clamp_xlim(new_xlim):
@@ -132,7 +173,7 @@ def on_scroll(event):
     
     prev_xrange = current_xrange
     
-    scale_factor = 1.1 if event.button == 'up' else 1/1.1
+    scale_factor = 1.1 if event.button == 'down' else 1/1.1
     current_xrange *= scale_factor
     
     min_xrange = (total_max - total_min)/100
