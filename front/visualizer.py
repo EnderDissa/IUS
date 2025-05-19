@@ -2,26 +2,24 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
 df = pd.read_csv('input.csv')
-#print(df.columns)
 
-df.sort_values(by='time', inplace=True)
-processes = df['process_id'].unique()
+df.sort_values(by='time_ms', inplace=True)
+processes = df['task'].unique()
 
 plt.figure(figsize=(12, 6))
 
 for process in processes:
-    process_data = df[df['process_id'] == process]
-    #print(process_data)
+    process_data = df[df['task'] == process]
     for i in range(len(process_data) - 1):
         current = process_data.iloc[i]
         next_event = process_data.iloc[i + 1]
-        if current['status'] == 1:
-            start_time = current['time']
-            end_time = next_event['time']
+        if current['event'] == 'in':
+            start_time = current['time_ms']
+            end_time = next_event['time_ms']
             plt.barh(process, end_time - start_time, left=start_time, height=0.1, color='green', edgecolor='black')
 
 plt.title('Гонка процессов')
-plt.xlabel('Время')
+plt.xlabel('Время (мс)')
 plt.ylabel('ID процесса')
 plt.grid(True, axis='x', linestyle='--', alpha=0.5)
 
